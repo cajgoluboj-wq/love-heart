@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>I love you ❤️</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #000;
+    overflow: hidden;
+    height: 100%;
+  }
+  canvas {
+    display: block;
+    margin: 0 auto;
+    background: #000;
+  }
+</style>
+</head>
+<body>
+<canvas id="heart"></canvas>
+
+<script>
+const canvas = document.getElementById("heart");
+const ctx = canvas.getContext("2d");
+
+// Размер canvas = размер окна
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+// Центр экрана
+const cx = canvas.width / 2;
+const cy = canvas.height / 2;
+
+// Масштаб (подгоняем под экран)
+const scale = Math.min(canvas.width, canvas.height) / 40;
+
+ctx.fillStyle = "hotpink";
+ctx.strokeStyle = "hotpink";
+ctx.font = "bold 14px Arial";
+ctx.textAlign = "center";
+
+let i = 0;
+const totalSteps = 600;
+
+function draw() {
+  if (i >= totalSteps) return;
+
+  const t = i / 20;
+  const x = 16 * Math.pow(Math.sin(t), 3);
+  const y = 13 * Math.cos(t)
+          - 5 * Math.cos(2 * t)
+          - 2 * Math.cos(3 * t)
+          - Math.cos(4 * t);
+
+  // Ось Y в canvas направлена вниз, поэтому инвертируем
+  const px = cx + x * scale;
+  const py = cy - y * scale;
+
+  // Рисуем "точку-след" черепашки
+  ctx.beginPath();
+  ctx.arc(px, py, 2, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Каждые 10 шагов пишем "I love you"
+  if (i % 10 === 0) {
+    ctx.fillText("I love you", px, py);
+  }
+
+  i++;
+  requestAnimationFrame(draw);
+}
+
+draw();
+
+// Адаптация при изменении размера окна
+window.addEventListener("resize", () => {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  location.reload(); // простой перезапуск
+});
+</script>
+</body>
+</html>
